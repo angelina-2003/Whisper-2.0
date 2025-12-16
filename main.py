@@ -37,7 +37,7 @@ def get_user_by_username(username: str):
     conn.close()
 
     if row is None:
-        return{"Error" : "User not found"}
+          return {"error": "User not found"}
 
     return {"user_id": row[0]}
 
@@ -120,6 +120,8 @@ def get_or_create_conversation(user1_id: int, user2_id: int):
     row = cur.fetchone()
 
     if row:
+        cur.close()
+        conn.close()
         return {"conversation_id": row[0]}
 
     # else create one
