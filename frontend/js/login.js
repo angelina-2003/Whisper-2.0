@@ -5,6 +5,7 @@ console.log("login.js loaded");
 const loginForm = document.getElementById("login-form");
 const usernameInput = document.getElementById("uname")
 
+
 if (loginForm) {
     loginForm.addEventListener("submit", async function (e) {
         e.preventDefault();

@@ -1,9 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+import bcrypt
 from database import get_connection
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -13,9 +15,95 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/")
 def health_check():
     return {"status": "server is running"}
+
+
+
+class RegisterRequest(BaseModel):
+    username: str
+    password: str
+
+
+@app.post("/auth/register")
+def register_new_user(data: RegisterRequest):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    # check if the username already exists
+    cur.execute(
+        """
+        SELECT id FROM users WHERE LOWER(username) = LOWER(%s)
+        """, (data.username,)
+    )
+
+    if cur.fetchone():
+        cur.close()
+        conn.close()
+        raise HTTPException(status_code=400, detail="Username already exists")
+    
+
+    password_hash = bcrypt.hashpw(
+        data.password.encode(),
+        bcrypt.gensalt()
+    ).decode()
+
+
+    cur.execute(
+        """
+        INSERT INTO users (username, password)
+        VALUES (%s, %s)
+        RETURNING id
+        """,
+        (data.username, password_hash)
+    )
+
+    user_id = cur.fetchone()[0]
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    return {"user_id": user_id}
+
+
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str 
+
+
+@app.post("/auth/login")
+def login_user(data: LoginRequest):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute(
+        """
+        SELECT id, password
+        FROM users
+        WHERE LOWER(username) = LOWER(%s)
+        """, (data.username,)
+    )
+
+    row = cur.fetchone()
+    cur.close()
+    conn.close()
+
+    if not row:
+        raise HTTPException(status="401", detail="Invalid Credentials")
+
+
+    user_id, stored_hash = row
+
+
+    if not bcrypt.checkpw(data.password.encode(), stored_hash.encode()):
+        raise HTTPException(status_code=401, detail="Invalid Credentials")
+    
+    return {"User": user_id}
+
+
 
 
 @app.get("/users/by-username/{username}")
@@ -40,6 +128,10 @@ def get_user_by_username(username: str):
           return {"error": "User not found"}
 
     return {"user_id": row[0]}
+
+
+
+
 
 
 
@@ -137,6 +229,8 @@ def get_or_create_conversation(user1_id: int, user2_id: int):
     return {"conversation_id": conversation_id}
 
 
+
+
 @app.get("/conversations/for-user/{user_id}")
 def get_conversations_for_user(user_id: int):
     conn = get_connection()
@@ -175,5 +269,6 @@ def get_conversations_for_user(user_id: int):
         })
 
     return conversations
+
 
 
