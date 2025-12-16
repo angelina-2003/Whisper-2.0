@@ -1,8 +1,17 @@
 from fastapi import FastAPI
 from database import get_connection
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],   # allow all for development
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def health_check():
@@ -13,6 +22,10 @@ class MessageCreate(BaseModel):
     sender_id: int
     content: str 
 
+
+'''
+Inserts values into the messages data
+'''
 @app.post("/messages")
 def send_message(message: MessageCreate):
     conn = get_connection()
@@ -31,6 +44,7 @@ def send_message(message: MessageCreate):
     conn.close()
 
     return {"status": "message stored"}
+
 
 
 @app.get("/conversations/{conversation_id}/messages")
@@ -62,5 +76,7 @@ def get_messages(conversation_id: int):
         })
 
     return messages
+
+
 
 

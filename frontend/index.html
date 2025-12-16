@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Whisper</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
+    </head>
+    <body>
+        <header>
+            <h1>Chats</h1>
+        </header>
+        <main>
+            <div class="screen">
+
+                <div class="sidebar">
+
+                    <div class="sidebar-menu">
+                        <p><i class="fa-solid fa-comments"></i>Chats</p>
+                        <p><i class="fa-solid fa-user-group"></i>Friends</p>
+                        <p><i class="fa-solid fa-users"></i>Groups</p>
+                        <p><i class="fa-solid fa-box-archive"></i>Archive</p>
+                    </div>
+
+                    <div class="sidebar-footer">
+                        <p><i class="fa-solid fa-user"></i>Profile</p>
+                        <p><i class="fa-solid fa-gear"></i>Settings</p>
+                        <p><i class="fa-solid fa-right-from-bracket"></i>Logout</p>
+                    </div>
+                </div>
+
+                <div class="all-chats">
+                        
+                    <div class="searchbar">
+                        <input type="text" placeholder="Search chats">
+                    </div>
+
+                    <div class="chat-item">
+                        <div class="avatar">
+                            A
+                        </div>
+                        <div class="chat-info">
+                            <p class="name">Alice</p>
+                            <p class="chat-preview">How are you?</p>
+                        </div>
+                    </div>
+
+                    <div class="chat-item">
+                        <div class="avatar">
+                            B
+                        </div>
+                        <div class="chat-info">
+                            <p class="name">Ben</p>
+                            <p class="chat-preview">Paris was AWESOME!!</p>
+                        </div>
+                    </div>
+
+                    <div class="chat-item">
+                        <div class="avatar">
+                            C
+                        </div>
+                        <div class="chat-info">
+                            <p class="name">Charlie</p>
+                            <p class="chat-preview">Party tonight?🍾</p>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="chat-window">
+                    <div class="chat-header">
+                        <h2>Alice</h2>
+                        <p class="status">online now</p>
+                    </div>
+
+                    <div class="messages" id="messages">
+                    <!-- messages will be injected here -->
+                    </div>
+                    
+            
+                    <div class="chat-input">
+                        <input type="text" id="message-input" placeholder="Type a message">
+                        <button id="send-button" class="send-button">↑</button>
+                    </div>
+                </div>
+                    
+
+            </div>
+        </main>
+
+        <script src="./script.js"></script>
+
+
+    </body>
+</html>
