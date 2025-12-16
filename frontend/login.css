@@ -1,0 +1,36 @@
+
+
+.title{
+    font-family: papyrus;
+    font-size: 3rem;
+    font-style: italic;
+    font-weight: bold;
+    text-align: center;
+    padding: 1rem;
+}
+
+p{
+    font-size: 1rem;
+    color:rgb(32, 3, 3)                                                                                                                 */
+}
+
+.login{
+    text-align: center;
+    font-size: 1rem;
+    background: rgba(211, 215, 226, 0.385);
+    border: 0.2px solid black;
+    padding: 2rem;
+
+    margin: 3rem auto;
+    max-width: 300px;
+    width: 90%;
+
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    backdrop-filter: blur(2px);
+
+    display: flex;
+    flex-direction: column;
+
+}
+

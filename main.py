@@ -17,11 +17,36 @@ app.add_middleware(
 def health_check():
     return {"status": "server is running"}
 
+
+@app.get("/users/by-username/{username}")
+def get_user_by_username(username: str):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute(
+        """
+        SELECT id
+        FROM users 
+        WHERE LOWER(name) = LOWER(%s)
+        """, (username)
+    )
+
+    row = cur.fetchone()
+
+    cur.close()
+    conn.close()
+
+    if row is None:
+        return("Error: User not found")
+
+    return {"user_id": row[0]}
+
+
+
 class MessageCreate(BaseModel):
     conversation_id: int
     sender_id: int
     content: str 
-
 
 '''
 Inserts values into the messages data
@@ -76,7 +101,6 @@ def get_messages(conversation_id: int):
         })
 
     return messages
-
 
 
 
